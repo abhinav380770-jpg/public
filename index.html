@@ -30,43 +30,6 @@
         </div>
     </section>
 
-    <section id="shop" class="section">
-        <h2 class="section-title">Available Now</h2>
-        <div class="grid">
-            <div class="card">
-                <img src="images/product1.jpg" alt="Crochet Item" class="card-img">
-                <h3>Handmade Crochet Shirt</h3>
-                <p class="price">₹2499</p>
-                <button class="buy-btn">Add to Cart</button>
-            </div>
-            <div class="card">
-                <img src="images/product2.jpg" alt="Crochet Item" class="card-img">
-                <h3>Cozy Winter Beanie</h3>
-                <p class="price">₹899</p>
-                <button class="buy-btn">Add to Cart</button>
-            </div>
-            <div class="card">
-                <img src="images/product3.jpg" alt="Crochet Item" class="card-img">
-                <h3>Babydoll Top</h3>
-                <p class="price">₹1750</p>
-                <button class="buy-btn">Add to Cart</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="gallery" class="section">
-        <h2 class="section-title">My Crochet Journey</h2>
-        <p style="text-align: center; margin-bottom: 30px;">A collection of my favorite past projects and custom creations.</p>
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="images/product1.jpg" alt="Crochet Project"><div class="overlay"><span></span></div></div>
-            <div class="gallery-item"><img src="images/product2.jpg" alt="Crochet Project"><div class="overlay"><span></span></div></div>
-            <div class="gallery-item"><img src="images/product3.jpg" alt="Crochet Project"><div class="overlay"><span></span></div></div>
-            <div class="gallery-item"><img src="images/product4.jpg" alt="Crochet Project"><div class="overlay"><span>Sunflower Coasters</span></div></div>
-            <div class="gallery-item"><img src="images/product5.jpg" alt="Crochet Project"><div class="overlay"><span></span></div></div>
-            <div class="gallery-item"><img src="images/product6.jpg" alt="Crochet Project"><div class="overlay"><span></span></div></div>
-        </div>
-    </section>
-
     <section id="contact" class="section alt-bg">
         <h2 class="section-title">Request a Custom Creation</h2>
         <div class="contact-container">
@@ -97,6 +60,7 @@
             const now = new Date();
             const options = { timeZone: 'Asia/Kolkata' };
             
+            // Collects all data including precise Hyderabad time
             const formData = {
                 name: document.getElementById('customer-name').value,
                 email: document.getElementById('customer-email').value,
@@ -107,7 +71,7 @@
             };
 
             try {
-                // Pointing to your NEW live backend URL
+                // Fixed URL to match your LIVE Render service
                 const response = await fetch('https://public-naxb.onrender.com/api/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -115,16 +79,16 @@
                 });
 
                 if (response.ok) {
-                    alert('✅ Order submitted successfully!');
+                    alert('✅ Order submitted successfully! Check MongoDB Atlas.');
                     e.target.reset();
                 } else {
-                    alert('❌ Submission failed. Check backend status.');
+                    alert('❌ Submission failed. Check your Render logs.');
                 }
             } catch (err) {
-                console.error(err);
+                console.error('Fetch error:', err);
                 alert('❌ Could not connect to the server.');
             }
-        }); // Added missing closing brackets here
+        }); // Closing brackets correctly added here
     </script>
 </body>
 </html>

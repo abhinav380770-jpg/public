@@ -49,3 +49,9 @@ app.post('/api/orders', async (req, res) => {
     res.status(500).json({ error: 'Failed to save order' });
   }
 });
+const PORT = process.env.PORT || 3000; // Render provides the PORT variable
+
+app.listen(PORT, () => {
+  console.log(`✅ Server is running on port ${PORT}`);
+  console.log(`✅ Ginger Tea Database Connected!`);
+});

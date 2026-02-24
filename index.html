@@ -87,7 +87,7 @@
     <section id="contact" class="section alt-bg">
         <h2 class="section-title">Request a Custom Creation</h2>
         <div class="contact-container">
-            <form id="crochet-form">
+        <form id="crochet-form">
   <input type="text" id="customer-name" placeholder="Your Name" required>
   <input type="email" id="customer-email" placeholder="Your Email" required>
   <select id="order-category">
@@ -116,8 +116,8 @@ const formData = {
   email: document.getElementById('customer-email').value,
   category: document.getElementById('order-category').value,
   description: document.getElementById('order-desc').value,
-  orderDate: now.toLocaleDateString('en-IN'), // Adds DD/MM/YYYY
-  orderTime: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) // Adds HH:MM AM/PM
+  orderDate: now.toLocaleDateString('en-IN'),
+  orderTime: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
 };
 
     try {

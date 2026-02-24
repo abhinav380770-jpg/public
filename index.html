@@ -115,7 +115,7 @@
     };
 
     try {
-      const response = await fetch('https://ginger-tea-backend.onrender.com', {
+      const response = await fetch('https://ginger-tea-backend.onrender.com/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

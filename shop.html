@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | Ginger Tea Crochet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Ginger Tea Shop 🧶</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="cart.html" class="cart-link">🛒 Cart (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="section">
+        <h2 class="section-title">All Available Creations</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="images/product1.jpg" alt="Crochet Shirt" class="card-img">
+                <h3>Handmade Crochet Shirt</h3>
+                <p class="price">₹2499</p>
+                <button class="buy-btn" onclick="addToCart('Handmade Crochet Shirt', 2499)">Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <img src="images/product2.jpg" alt="Crochet Beanie" class="card-img">
+                <h3>Cozy Winter Beanie</h3>
+                <p class="price">₹899</p>
+                <button class="buy-btn" onclick="addToCart('Cozy Winter Beanie', 899)">Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <img src="images/product3.jpg" alt="Crochet Top" class="card-img">
+                <h3>Babydoll Top</h3>
+                <p class="price">₹1749</p>
+                <button class="buy-btn" onclick="addToCart('Babydoll Top', 1749)">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/product4.jpg" alt="Crochet Doily" class="card-img">
+                <h3>Crochet Doily</h3>
+                <p class="price">₹749</p>
+                <button class="buy-btn" onclick="addToCart('Crochrt Doily', 749)">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/product5.jpg" alt="Crochet" class="card-img">
+                <h3>Crochet </h3>
+                <p class="price">₹499</p>
+                <button class="buy-btn" onclick="addToCart('Crochet', 499)">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/product6.jpg" alt="Baby Dress" class="card-img">
+                <h3>Baby Dress</h3>
+                <p class="price">₹1749</p>
+                <button class="buy-btn" onclick="addToCart('Baby Dress', 1749)">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/product7.jpg" alt="New Born Dress" class="card-img">
+                <h3>New Born Dress</h3>
+                <p class="price">₹1749</p>
+                <button class="buy-btn" onclick="addToCart('New Born Dress', 1749)">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/product8.jpg" alt="Crochet Rose" class="card-img">
+                <h3>Crochet Rose</h3>
+                <p class="price">₹249</p>
+                <button class="buy-btn" onclick="addToCart('Crochet Rose', 249)">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/product9.jpg" alt="Crochet Airpods Case" class="card-img">
+                <h3>Crochet Airpods Case</h3>
+                <p class="price">₹799</p>
+                <button class="buy-btn" onclick="addToCart('Crochet Airpods Case', 799)">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Made with ❤️ in Hyderabad</p>
+        <p>&copy; 2026 Ginger Tea Crochet</p>
+    </footer>
+
+    <script>
+        // Core Add-to-Cart Logic
+        function addToCart(name, price) {
+            let cart = JSON.parse(localStorage.getItem('gingerCart')) || [];
+            cart.push({ name, price });
+            localStorage.setItem('gingerCart', JSON.stringify(cart));
+            updateCartCount();
+            alert(`🧶 ${name} added to your cart!`);
+        }
+
+        // Navigation Bar Counter Logic
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('gingerCart')) || [];
+            const countElement = document.getElementById('cart-count');
+            if (countElement) {
+                countElement.innerText = cart.length;
+            }
+        }
+
+        // Initialize count on page load
+        updateCartCount();
+    </script>
+</body>
+</html>

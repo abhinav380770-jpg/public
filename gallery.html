@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | Ginger Tea Crochet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Ginger Tea Gallery 🧶</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="cart.html" class="cart-link">🛒 Cart (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="section">
+        <h2 class="section-title">Our Creations</h2>
+        <div class="grid">
+            <div class="card gallery-card">
+                <img src="images/product1.jpg" alt="Crochet Item" class="card-img">
+                <div class="gallery-info">
+                    <h3>Handmade Crochet Shirt</h3>
+                </div>
+            </div>
+
+            <div class="card gallery-card">
+                <img src="images/product2.jpg" alt="Crochet Item" class="card-img">
+                <div class="gallery-info">
+                    <h3>Cozy Winter Beanie</h3>
+                </div>
+            </div>
+
+            <div class="card gallery-card">
+                <img src="images/product3.jpg" alt="Crochet Item" class="card-img">
+                <div class="gallery-info">
+                    <h3>Babydoll Top</h3>
+                </div>
+            </div>
+            <div class="card gallery-card">
+                <img src="images/product4.jpg" alt="Crochet Item" class="card-img">
+                <div class="gallery-info">
+                    <h3>Handmade Crochet Shirt</h3>
+                </div>
+            </div>
+            <div class="card gallery-card">
+                <img src="images/product5.jpg" alt="Crochet Item" class="card-img">
+                <div class="gallery-info">
+                    <h3>Cute Hand Purse</h3>
+                </div>
+            </div>
+            <div class="card gallery-card">
+                <img src="images/product6.jpg" alt="Crochet Item" class="card-img">
+                <div class="gallery-info">
+                    <h3>Baby Dress</h3>
+                </div>
+            </div>
+            <div class="card gallery-card">
+                <img src="images/product7.jpg" alt="Crochet Item" class="card-img">
+                <div class="gallery-info">
+                    <h3>New Born Dress</h3>
+                </div>
+            </div>
+            <div class="card gallery-card">
+                <img src="images/product8.jpg" alt="Crochet Item" class="card-img">
+                <div class="gallery-info">
+                    <h3>Crochet Rose</h3>
+                </div>
+            </div>
+             <div class="card gallery-card">
+                <img src="images/product9.jpg" alt="Crochet Item" class="card-img">
+                <div class="gallery-info">
+                    <h3>Accesories</h3>
+                </div>
+            </div>
+            </div>
+    </section>
+
+    <footer>
+        <p>Made with ❤️ in Hyderabad</p>
+        <p>&copy; 2026 Ginger Tea Crochet</p>
+    </footer>
+
+    <script>
+         // Keeping the cart count synced from LocalStorage
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('gingerCart')) || [];
+            const countElement = document.getElementById('cart-count');
+            if (countElement) {
+                countElement.innerText = cart.length;
+            }
+        }
+        updateCartCount();
+    </script>
+</body>
+</html>

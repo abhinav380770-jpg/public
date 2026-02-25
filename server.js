@@ -33,23 +33,22 @@ const Order = mongoose.model('Order', OrderSchema);
 
 app.post('/api/orders', async (req, res) => {
   try {
-    // Read all fields from the request body
     const { name, email, description, items, totalAmount, orderDate, orderTime } = req.body;
     
     const newOrder = new Order({
       name,
       email,
-      description: description || "Cart Order", // Set default if missing
-      items,
-      totalAmount,
+      description: description || "Cart Order", // Fallback for cart orders
+      items: items || [], // Fallback for custom orders
+      totalAmount: totalAmount || 0,
       orderDate,
       orderTime
     });
 
     await newOrder.save();
-    res.status(201).json({ message: '✅ Order saved successfully!' });
+    res.status(201).json({ message: '✅ Order saved!' });
   } catch (err) {
-    console.error("Database Error:", err);
+    console.error(err);
     res.status(500).json({ error: 'Failed to save order' });
   }
 });

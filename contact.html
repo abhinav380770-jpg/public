@@ -15,7 +15,7 @@
                 <li><a href="shop.html">Shop</a></li>
                 <li><a href="gallery.html">Gallery</a></li>
                 <li><a href="blog.html">Blog</a></li>
-                <li><a href="cart.html" class="cart-link">🛒 Cart (<span id="cart-count">0</span>)</a></li>
+                <li><a href="auth.html">Login / Sign Up</a></li> <li><a href="cart.html" class="cart-link">🛒 Cart (<span id="cart-count">0</span>)</a></li>
             </ul>
         </nav>
     </header>
@@ -26,6 +26,7 @@
             <form id="crochet-form">
                 <input type="text" id="customer-name" placeholder="Your Name" required>
                 <input type="email" id="customer-email" placeholder="Your Email" required>
+                
                 <select id="order-category">
                     <option value="Clothing">Clothing</option>
                     <option value="Accessories">Accessories</option>
@@ -39,7 +40,8 @@
     </section>
 
     <footer>
-        <p>Handmade in Hyderabad</p>
+        <p>Made with ❤️ in Hyderabad</p>
+        <p>Created by Malavika Padava</p>
         <p>&copy; 2026 Ginger Tea Crochet</p>
     </footer>
 
@@ -54,21 +56,29 @@
         }
         updateCartCount();
 
-        // 2. Form Submission Logic
+        // 2. Form Submission Logic with Auth Check
         document.getElementById('crochet-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const now = new Date();
+            const user = JSON.parse(localStorage.getItem('user'));
+
             const formData = {
-                name: document.getElementById('customer-name').value,
-                email: document.getElementById('customer-email').value,
+                // Use logged-in user data if available; else use form inputs
+                name: user ? user.name : document.getElementById('customer-name').value,
+                email: user ? user.email : document.getElementById('customer-email').value,
                 description: document.getElementById('order-desc').value,
                 category: document.getElementById('order-category').value,
                 orderDate: now.toLocaleDateString('en-IN'),
                 orderTime: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
             };
 
+            // Basic validation for guests
+            if (!formData.name || !formData.email) {
+                alert("Please login or provide your contact details.");
+                return;
+            }
+
             try {
-                // Ensure this matches your Render URL
                 const response = await fetch('https://public-7vab.onrender.com/api/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -86,11 +96,37 @@
                 alert('❌ Could not connect to the server.');
             }
         });
+
+        // 3. Navigation Bar Logic
+        function updateNavBar() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (user && navLinks) {
+                // Remove Login link
+                const loginLink = Array.from(navLinks.querySelectorAll('a')).find(a => a.getAttribute('href') === 'auth.html');
+                if (loginLink) loginLink.parentElement.remove();
+
+                // Add Profile and Logout links
+                navLinks.innerHTML += `
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="#" onclick="logout()">Logout</a></li>
+                `;
+
+                // Optional: Hide Name/Email inputs if logged in for a cleaner look
+                document.getElementById('customer-name').style.display = 'none';
+                document.getElementById('customer-email').style.display = 'none';
+                document.getElementById('customer-name').required = false;
+                document.getElementById('customer-email').required = false;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        updateNavBar();
     </script>
-    <footer>
-        <p>Made with ❤️ in Hyderabad</p>
-        <p>Created by Malavika Padava</p>
-        <p>&copy; 2026 Ginger Tea Crochet</p>
-    </footer>
 </body>
 </html>

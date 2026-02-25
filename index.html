@@ -153,5 +153,42 @@
         }
     }); 
 </script>
+<script>
+    function updateNavBar() {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (user && navLinks) {
+            // Find the Login link by its exact href
+            const loginLink = Array.from(navLinks.querySelectorAll('a')).find(a => a.getAttribute('href') === 'auth.html');
+            
+            if (loginLink) {
+                // Remove the entire <li> element containing the login link
+                loginLink.parentElement.remove();
+
+                // Add the Profile and Logout links for the logged-in user
+                navLinks.innerHTML += `
+                    <li><a href="profile.html">My Profile</a></li>
+                `;
+            }
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('user');
+        window.location.href = 'index.html'; // Refresh page to show Login again
+    }
+
+    // Run the check immediately when the page loads
+    updateNavBar();
+
+    // Also include your existing cart count logic here to keep it synced
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('gingerCart')) || [];
+        const countElement = document.getElementById('cart-count');
+        if (countElement) countElement.innerText = cart.length;
+    }
+    updateCartCount();
+</script>
 </body>
 </html>

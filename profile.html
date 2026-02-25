@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Ginger Tea Crochet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Ginger Tea Account 🧶</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="cart.html" class="cart-link">🛒 Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+        </nav>
+    </header>
+
+    <section class="section">
+        <div class="contact-container" style="text-align: center;">
+            <h2 id="welcome-msg">Your Profile</h2>
+            
+            <div class="card" style="padding: 30px; margin-top: 20px; background-color: #fdf5e6;">
+                <p style="font-size: 1.2rem; margin-bottom: 10px;">
+                    <strong>Name:</strong> <span id="display-name"></span>
+                </p>
+                <p style="font-size: 1.2rem; margin-bottom: 20px;">
+                    <strong>Email:</strong> <span id="display-email"></span>
+                </p>
+                <button onclick="logout()" class="cta-btn" style="background-color: #8b4513;">Log Out</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Made with ❤️ in Hyderabad</p>
+        <p>&copy; 2026 Ginger Tea Crochet</p>
+    </footer>
+
+    <script>
+        // 1. Fetch user data from local storage
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!user) {
+            // If no user is logged in, redirect to the login page
+            alert("Please log in to view your profile.");
+            window.location.href = 'auth.html';
+        } else {
+            // Display the user's information
+            document.getElementById('welcome-msg').innerText = `Welcome, ${user.name}!`;
+            document.getElementById('display-name').innerText = user.name;
+            document.getElementById('display-email').innerText = user.email;
+        }
+
+        // 2. Global Logout Function
+        function logout() {
+            localStorage.removeItem('user'); // Clear user data
+            alert("Logged out successfully.");
+            window.location.href = 'index.html'; // Redirect to home
+        }
+
+        // 3. Keep Cart count updated
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('gingerCart')) || [];
+            const countElement = document.getElementById('cart-count');
+            if (countElement) countElement.innerText = cart.length;
+        }
+        updateCartCount();
+    </script>
+</body>
+</html>

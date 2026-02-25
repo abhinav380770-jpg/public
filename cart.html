@@ -15,20 +15,26 @@
                 <li><a href="gallery.html">Gallery</a></li>
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="contact.html">🧶Custom Order</a></li>
+                <li><a href="auth.html">Login / Sign Up</a></li>
             </ul>
         </nav>
     </header>
 
     <section class="section">
         <div class="contact-container">
-            <div id="cart-items">
-                </div>
+            <div id="cart-items"></div>
             <div id="cart-total" style="font-weight: bold; margin-top: 20px;">
                 Total: ₹0
             </div>
             <button id="checkout-btn" class="cta-btn" style="margin-top: 20px;">Place Order</button>
         </div>
     </section>
+
+    <footer>
+        <p>Made with ❤️ in Hyderabad</p>
+        <p>Created by Malavika Padava</p>
+        <p>&copy; 2026 Ginger Tea Crochet</p>
+    </footer>
 
     <script>
         const cartItemsContainer = document.getElementById('cart-items');
@@ -40,6 +46,7 @@
         function displayCart() {
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+                totalContainer.innerText = `Total: ₹0`;
                 return;
             }
             
@@ -65,29 +72,31 @@
 
         displayCart();
 
-        // --- MERGED CHECKOUT LOGIC STARTS HERE ---
+        // --- UPDATED CHECKOUT LOGIC: LOGIN REQUIRED ---
         document.getElementById('checkout-btn').addEventListener('click', async () => {
             if (cart.length === 0) {
                 alert("Your cart is empty!");
                 return;
             }
 
-            const customerName = prompt("Please enter your name:");
-            const customerEmail = prompt("Please enter your email:");
+            const user = JSON.parse(localStorage.getItem('user'));
 
-            if (!customerName || !customerEmail) {
-                alert("Name and Email are required to place an order.");
+            // If no user is logged in, redirect to auth page
+            if (!user) {
+                alert("Please login or sign up to place your order.");
+                window.location.href = 'auth.html';
                 return;
             }
 
+            // User is logged in, proceed directly with stored credentials
             try {
                 const response = await fetch('https://public-7vab.onrender.com/api/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        name: customerName,
-                        email: customerEmail,
-                        items: cart, // The array of items
+                        name: user.name,
+                        email: user.email,
+                        items: cart,
                         totalAmount: cart.reduce((sum, item) => sum + item.price, 0),
                         orderDate: new Date().toLocaleDateString('en-IN'),
                         orderTime: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
@@ -95,8 +104,8 @@
                 });
 
                 if (response.ok) {
-                    alert('✅ Order placed successfully!');
-                    localStorage.removeItem('gingerCart'); // Clear memory
+                    alert(`✅ Order placed successfully! Thank you, ${user.name}.`);
+                    localStorage.removeItem('gingerCart');
                     window.location.href = 'index.html';
                 } else {
                     alert('❌ Failed to place order. Check your server status.');
@@ -106,11 +115,29 @@
                 alert('❌ Connection error to the server.');
             }
         });
+
+        // --- NAV BAR LOGIC ---
+        function updateNavBar() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (user && navLinks) {
+                const loginLink = Array.from(navLinks.querySelectorAll('a')).find(a => a.getAttribute('href') === 'auth.html');
+                if (loginLink) loginLink.parentElement.remove();
+
+                navLinks.innerHTML += `
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="#" onclick="logout()">Logout</a></li>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        updateNavBar();
     </script>
-    <footer>
-        <p>Made with ❤️ in Hyderabad</p>
-        <p>Created by Malavika Padava</p>
-        <p>&copy; 2026 Ginger Tea Crochet</p>
-    </footer>
 </body>
 </html>

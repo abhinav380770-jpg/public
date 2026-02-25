@@ -17,20 +17,63 @@ mongoose.connect(uri)
         console.log("Tip: Check if your password in .env is correct!");
     });
 
-// Updated Schema to handle both Custom (description) and Cart (items)
+// --- SCHEMAS ---
+
+// 1. User Schema for Login/Signup
+const UserSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }, // Plain text for now; use hashing in production
+  createdAt: { type: Date, default: Date.now }
+});
+const User = mongoose.model('User', UserSchema);
+
+// 2. Order Schema (Updated for Cart & Custom)
 const OrderSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
-  description: { type: String }, // Optional for Cart orders
-  items: [ { name: String, price: Number } ], // To store the list from the cart
+  description: { type: String }, 
+  items: [ { name: String, price: Number } ], 
   totalAmount: { type: Number },
   orderDate: { type: String },
   orderTime: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
-
 const Order = mongoose.model('Order', OrderSchema);
 
+// --- ROUTES ---
+
+// 1. Signup Route
+app.post('/api/signup', async (req, res) => {
+  const { name, email, password } = req.body;
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ error: "Email already registered" });
+
+    const newUser = new User({ name, email, password });
+    await newUser.save();
+    res.status(201).json({ message: "User created successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to create account" });
+  }
+});
+
+// 2. Login Route
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email, password });
+    if (user) {
+      res.status(200).json({ message: "Login successful", user: { name: user.name, email: user.email } });
+    } else {
+      res.status(401).json({ error: "Invalid email or password" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// 3. Orders Route (Handles Custom & Cart)
 app.post('/api/orders', async (req, res) => {
   try {
     const { name, email, description, items, totalAmount, orderDate, orderTime } = req.body;
@@ -38,8 +81,8 @@ app.post('/api/orders', async (req, res) => {
     const newOrder = new Order({
       name,
       email,
-      description: description || "Cart Order", // Fallback for cart orders
-      items: items || [], // Fallback for custom orders
+      description: description || "Cart Order",
+      items: items || [],
       totalAmount: totalAmount || 0,
       orderDate,
       orderTime
@@ -51,4 +94,10 @@ app.post('/api/orders', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Failed to save order' });
   }
+});
+
+// Start the Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Server is running on port ${PORT}`);
 });

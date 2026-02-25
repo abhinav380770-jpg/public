@@ -17,41 +17,39 @@ mongoose.connect(uri)
         console.log("Tip: Check if your password in .env is correct!");
     });
 
-// Schema for Crochet Orders
+// Updated Schema to handle both Custom (description) and Cart (items)
 const OrderSchema = new mongoose.Schema({
-  name: { type: String, required: true },        // New field for the customer's name
-  email: { type: String, required: true },       // New field for their contact info
-  description: { type: String, required: true }, // The crochet request
-  orderDate: { type: String },                   // For readable date (e.g., 24/02/2026)
-  orderTime: { type: String },                   // For readable time (e.g., 07:15 PM)
-  createdAt: { type: Date, default: Date.now }   // Keeps the raw timestamp for sorting
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  description: { type: String }, // Optional for Cart orders
+  items: [ { name: String, price: Number } ], // To store the list from the cart
+  totalAmount: { type: Number },
+  orderDate: { type: String },
+  orderTime: { type: String },
+  createdAt: { type: Date, default: Date.now }
 });
 
 const Order = mongoose.model('Order', OrderSchema);
 
-// Endpoint to receive orders from the frontend
 app.post('/api/orders', async (req, res) => {
   try {
-    const { name, email, description, orderDate, orderTime } = req.body;
+    // Read all fields from the request body
+    const { name, email, description, items, totalAmount, orderDate, orderTime } = req.body;
     
     const newOrder = new Order({
       name,
       email,
-      description,
+      description: description || "Cart Order", // Set default if missing
+      items,
+      totalAmount,
       orderDate,
       orderTime
     });
 
     await newOrder.save();
-    res.status(201).json({ message: '✅ Order saved to Ginger Tea database!' });
+    res.status(201).json({ message: '✅ Order saved successfully!' });
   } catch (err) {
-    console.error(err);
+    console.error("Database Error:", err);
     res.status(500).json({ error: 'Failed to save order' });
   }
-});
-const PORT = process.env.PORT || 3000; // Render provides the PORT variable
-
-app.listen(PORT, () => {
-  console.log(`✅ Server is running on port ${PORT}`);
-  console.log(`✅ Ginger Tea Database Connected!`);
 });

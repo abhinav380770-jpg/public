@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart | Ginger Tea Crochet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Your Shopping Cart 🧶</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Back to Shop</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="section">
+        <div class="contact-container">
+            <div id="cart-items">
+                </div>
+            <div id="cart-total" style="font-weight: bold; margin-top: 20px;">
+                Total: ₹0
+            </div>
+            <button id="checkout-btn" class="cta-btn" style="margin-top: 20px;">Place Order</button>
+        </div>
+    </section>
+
+    <script>
+        const cartItemsContainer = document.getElementById('cart-items');
+        const totalContainer = document.getElementById('cart-total');
+        
+        // Load cart from Local Storage
+        let cart = JSON.parse(localStorage.getItem('gingerCart')) || [];
+
+        function displayCart() {
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+                return;
+            }
+            
+            let total = 0;
+            cartItemsContainer.innerHTML = cart.map((item, index) => {
+                total += item.price;
+                return `
+                    <div class="card" style="display: flex; justify-content: space-between; padding: 10px; margin-bottom: 5px;">
+                        <span>${item.name}</span>
+                        <span>₹${item.price}</span>
+                        <button onclick="removeItem(${index})">Remove</button>
+                    </div>
+                `;
+            }).join('');
+            totalContainer.innerText = `Total: ₹${total}`;
+        }
+
+        window.removeItem = (index) => {
+            cart.splice(index, 1);
+            localStorage.setItem('gingerCart', JSON.stringify(cart));
+            displayCart();
+        };
+
+        displayCart();
+
+        // --- MERGED CHECKOUT LOGIC STARTS HERE ---
+        document.getElementById('checkout-btn').addEventListener('click', async () => {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+
+            const customerName = prompt("Please enter your name:");
+            const customerEmail = prompt("Please enter your email:");
+
+            if (!customerName || !customerEmail) {
+                alert("Name and Email are required to place an order.");
+                return;
+            }
+
+            try {
+                const response = await fetch('https://public-7vab.onrender.com/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: customerName,
+                        email: customerEmail,
+                        items: cart, // The array of items
+                        totalAmount: cart.reduce((sum, item) => sum + item.price, 0),
+                        orderDate: new Date().toLocaleDateString('en-IN'),
+                        orderTime: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+                    })
+                });
+
+                if (response.ok) {
+                    alert('✅ Order placed successfully!');
+                    localStorage.removeItem('gingerCart'); // Clear memory
+                    window.location.href = 'index.html';
+                } else {
+                    alert('❌ Failed to place order. Check your server status.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Connection error to the server.');
+            }
+        });
+    </script>
+</body>
+</html>
